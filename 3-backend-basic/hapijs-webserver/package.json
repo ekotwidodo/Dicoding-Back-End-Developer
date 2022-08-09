@@ -1,0 +1,15 @@
+{
+  "name": "hapijs-webserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Eko Teguh Widodo",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.2"
+  }
+}
