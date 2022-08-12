@@ -14,7 +14,7 @@ const router = [
   {
     method: "GET",
     path: "/books/{bookId}",
-    handler: bookHandlers.getBook,
+    handler: bookHandlers.getBookById,
   },
   {
     method: "PUT",

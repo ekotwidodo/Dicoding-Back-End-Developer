@@ -68,8 +68,28 @@ const getBooks = () => ({
 });
 
 // API mendapatkan detail buku
-const getBook = (request, h) => {
+const getBookById = (request, h) => {
+    const { bookId } = request.params;
 
+    const book = books.filter((b) => b.id === bookId)[0];
+
+    if (book !== undefined) {
+        const response = h.response({
+            status: 'success',
+            data: {
+              book,
+            },
+        });
+        response.code(200);
+        return response;
+    }
+
+    const response = h.response({
+        status: 'fail',
+        message: 'Buku tidak ditemukan'
+    });
+    response.code(404);
+    return response;
 }
 
 // API mengubah data buku
@@ -85,7 +105,7 @@ const deleteBook = (request, h) => {
 module.exports = {
     createBook,
     getBooks,
-    getBook,
+    getBookById,
     updateBook,
     deleteBook,
 }
