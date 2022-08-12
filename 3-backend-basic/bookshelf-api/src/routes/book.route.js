@@ -24,7 +24,7 @@ const router = [
   {
     method: "DELETE",
     path: "/books/{bookId}",
-    handler: bookHandlers.deleteBook,
+    handler: bookHandlers.deleteBookById,
   },
 ];
 
