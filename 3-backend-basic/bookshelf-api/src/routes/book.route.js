@@ -19,7 +19,7 @@ const router = [
   {
     method: "PUT",
     path: "/books/{bookId}",
-    handler: bookHandlers.updateBook,
+    handler: bookHandlers.updateBookById,
   },
   {
     method: "DELETE",
