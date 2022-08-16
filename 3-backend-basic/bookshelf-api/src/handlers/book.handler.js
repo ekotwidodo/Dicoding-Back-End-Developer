@@ -59,13 +59,83 @@ const createBook = (request, h) => {
     return response;
 }
 
+// Fungsi untuk mendapatkan buku yang dicari berdasarkan key dari query parameters
+const queryBooksWithSingleCondition = (key, filters) => {
+    let results = [];
+    switch (key) {
+        case 'name':
+            results = books.filter((b) => b.name.toLowerCase().indexOf(filters[key]) !== -1);
+            break;
+        case 'reading':
+            results = books.filter((b) => b.reading === filters[key]);
+            break;
+        case 'finished':
+            results = books.filter((b) => b.finished === filters[key]);
+            break;
+    }
+
+    return results;
+}
+
+// Belum diimplementasikan --> PR
+const queryBooksWithMultipleConditions = (filters) => {
+    return books;
+}
+
+// Mengubah bentuk query parameter menjadi bentuk yang sesuai, misalkan reading=1 menjadi reading=true/false
+const formattedConditions = (conditions) => {
+    let newConditions = {};
+    for (let key in conditions) {
+        if (conditions.hasOwnProperty(key)) {
+            if (key === 'name') {
+                newConditions[key] = conditions[key].toLowerCase();
+            } else if (key === 'reading' || key === 'finished') {
+                newConditions[key] = conditions[key] === '1' ? true : false;
+            }
+        }
+    }
+    return newConditions;
+}
+
 // API mendapatkan seluruh buku
-const getBooks = () => ({
-    status: 'success',
-    data: {
-        books,
-    },
-});
+// API mendapatkan detail buku berdasarkan name, reading, finished 
+const getBooks = (request, h) => {
+    // Mengakses query parameter
+    const params = request.query;
+    // By default, params akan tampak seperti [Object: null prototype] {} --> jika tidak ada query parameter
+    // Ada beberapa cara agar mengubahnya ke dalam bentuk {} saja
+    const stringConditions = JSON.stringify(params)
+    const filterConditions = JSON.parse(stringConditions)
+    
+    let resultBooks = [];
+
+    // Cek apakah ada query paramaters?
+    if (Object.keys(filterConditions).length === 1) { // Jika hanya 1 query parameter
+        // Ubah ke dalam bentuk yang sesuai
+        newFilterConditions = formattedConditions(filterConditions)
+        console.log(newFilterConditions)
+        resultBooks = queryBooksWithSingleCondition(Object.keys(newFilterConditions)[0], newFilterConditions);
+
+    } else if (Object.keys(filterConditions).length > 1) { // Jika lebih dari 1 query parameter
+        // Ubah ke dalam bentuk yang sesuai
+        newFilterConditions = formattedConditions(filterConditions)
+        console.log(newFilterConditions)
+        resultBooks = queryBooksWithMultipleConditions(newFilterConditions);
+
+    } else {
+        // Jika tidak ada query parameters, mengembalikan semua data books
+        resultBooks = books;
+    }
+
+    const response = h.response({
+        status: 'success',
+        data: {
+            books: resultBooks,
+        },
+    });
+    response.code(200);
+    return response;
+}
 
 // API mendapatkan detail buku
 const getBookById = (request, h) => {
