@@ -60,8 +60,9 @@ const createBook = (request, h) => {
 }
 
 // Fungsi untuk mendapatkan buku yang dicari berdasarkan key dari query parameters
-const queryBooksWithSingleCondition = (key, filters) => {
+const queryBooksWithSingleCondition = (filters, books) => {
     let results = [];
+    let key = Object.keys(filters)[0];
     switch (key) {
         case 'name':
             results = books.filter((b) => b.name.toLowerCase().indexOf(filters[key]) !== -1);
@@ -77,9 +78,17 @@ const queryBooksWithSingleCondition = (key, filters) => {
     return results;
 }
 
-// Belum diimplementasikan --> PR
-const queryBooksWithMultipleConditions = (filters) => {
-    return books;
+// fungsi untuk mendapatkan buku yang dicari secara banyak parameters, misal http://{root_api}:{port}/books?finished=0&reading=0&name=Dicoding
+const queryBooksWithMultipleConditions = (filters, books) => {
+    let results = books.filter((b) => {
+        for (let key in filters) {
+            if (b[key] === undefined) return false; // Cek nilainya tidak bernilai undefined
+            if (key === 'name' && b[key].toLowerCase().indexOf(filters[key]) === -1) return false; // Cek untuk key nama tidak ketemu
+            if (key !== 'name' && b[key] !== filters[key]) return false; // Cek nilai antara book dan filter tidak sama
+        }
+        return true;
+    });
+    return results;
 }
 
 // Mengubah bentuk query parameter menjadi bentuk yang sesuai, misalkan reading=1 menjadi reading=true/false
@@ -108,19 +117,18 @@ const getBooks = (request, h) => {
     const filterConditions = JSON.parse(stringConditions)
     
     let resultBooks = [];
+    const theBooks = books;
 
     // Cek apakah ada query paramaters?
     if (Object.keys(filterConditions).length === 1) { // Jika hanya 1 query parameter
         // Ubah ke dalam bentuk yang sesuai
         newFilterConditions = formattedConditions(filterConditions)
-        console.log(newFilterConditions)
-        resultBooks = queryBooksWithSingleCondition(Object.keys(newFilterConditions)[0], newFilterConditions);
+        resultBooks = queryBooksWithSingleCondition(newFilterConditions, theBooks);
 
     } else if (Object.keys(filterConditions).length > 1) { // Jika lebih dari 1 query parameter
         // Ubah ke dalam bentuk yang sesuai
         newFilterConditions = formattedConditions(filterConditions)
-        console.log(newFilterConditions)
-        resultBooks = queryBooksWithMultipleConditions(newFilterConditions);
+        resultBooks = queryBooksWithMultipleConditions(newFilterConditions, theBooks);
 
     } else {
         // Jika tidak ada query parameters, mengembalikan semua data books
