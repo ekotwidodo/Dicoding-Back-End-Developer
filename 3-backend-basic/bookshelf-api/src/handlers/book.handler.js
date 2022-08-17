@@ -138,7 +138,13 @@ const getBooks = (request, h) => {
     const response = h.response({
         status: 'success',
         data: {
-            books: resultBooks,
+            books: resultBooks.map((b) => {
+                return {
+                    id: b.id,
+                    name: b.name,
+                    publisher: b.publisher,
+                }
+            }),
         },
     });
     response.code(200);
