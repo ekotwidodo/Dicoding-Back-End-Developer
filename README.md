@@ -11,3 +11,5 @@ Kelas dasar dan pemula tersebut harus diselesaikan **sebelum tanggal 4 September
 ## Sertifikat Kelulusan
 
 - **[Belajar Dasar Pemrograman JavaScript](https://www.dicoding.com/certificates/N9ZO74GJRZG5)** pada 7 Juni 2022
+- **[Belajar Membuat Aplikasi Back-End untuk Pemula](https://www.dicoding.com/certificates/MEPJEG2MQX3V)** pada 18 Agustus 2022
+- **[Cloud Practitioner Essentials (Belajar Dasar AWS Cloud)](https://www.dicoding.com/certificates/4EXG5RMDQXRL)** pada 1 September 2022
